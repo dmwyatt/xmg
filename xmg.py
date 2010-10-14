@@ -40,7 +40,7 @@ def metagen(location, fanart_height_min = 0, fanart_width_min = 0, name=None, im
     disregard.  If no fanart available at specified resolution or greater, then
     we disregard.
 
-    name:  In the case of a movie, this should be the full movie name followed
+    name*:  In the case of a movie, this should be the full movie name followed
     by the year of the movie in parentheses. e.g. "The Matrix (1999)".  If this
     is specific enough to generate only one search result then we'll continue.
     Otherwise, we'll raise IdError.
@@ -51,12 +51,14 @@ def metagen(location, fanart_height_min = 0, fanart_width_min = 0, name=None, im
     imdb_id:  Use this argument if you know the imdb id of the show/movie.  If
     this is used, the tmdb_id argument is ignored.
 
-    tmdb_id:  Use this argument if you know the tmdb id of the movie.  If this
+    tmdb_id*:  Use this argument if you know the tmdb id of the movie.  If this
     is used, the imdb_id argument is ignored.
 
     imdbpy:  When xmg is used as a library, imdbpy may not be installed
     system-wide, but included with your application.  If this is the case, pass
     your instance of imdb.IMDb() to metagen, so we can use it.
+
+    *  These arguments are not yet supported.
 
     Notes
     ===========
@@ -108,12 +110,14 @@ def metagen(location, fanart_height_min = 0, fanart_width_min = 0, name=None, im
 
 
 def nfo_gen(imdbpy_movie, imdbpy):
+    ''' Get the imdb url for the specified movie object
+    '''
     nfo = imdbpy.get_imdbURL(imdbpy_movie)
     #TODO: Generate full nfo XML
     return nfo
 
 def get_imagelist(imdb_id):
-    ''' Returns a list of images from TMDb.
+    ''' Returns a list of image urls from TMDb.
     '''
     url = "http://api.themoviedb.org/2.1/Movie.imdbLookup/en/json/%s/%s" % (__tmdb_apikey__, "tt" + imdb_id)
     response = urllib2.urlopen(url)
@@ -173,6 +177,8 @@ def get_fanart(imdb_id, dir, min_height, min_width):
 
 
 def write_nfo(nfo, dir):
+    '''  Writes nfo to disk in a file called 'movie.nfo' in directory dir
+    '''
     dest = os.path.join(dir, "movie.nfo")
     if os.path.isfile(dest):
         shutil.move(dest, "%s.bak" % dest)
@@ -184,5 +190,11 @@ def write_nfo(nfo, dir):
         raise NfoError("Couldn't write nfo")
 
 if __name__ == "__main__":
-    id = '0955308'
+    import sys
+    try:
+        id = sys.argv[1]
+    except:
+        print "Type '%s _IMDBID_' to generate metadata." % sys.argv[0]
+        sys.exit()
+
     metagen(os.getcwd(), imdb_id = id )
