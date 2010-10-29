@@ -2,3 +2,4 @@ a.bat
 d.bat
 xmg/
 .idea/
+*.pyc
