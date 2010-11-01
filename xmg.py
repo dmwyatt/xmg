@@ -119,13 +119,13 @@ class metagen():
 
         return self._get_image(images, min_height, min_width)
 
-    def write_fanart(self, filename_root, path, min_height, min_width, ext=None):
+    def write_fanart(self, filename_root, path, min_height, min_width, orig_ext=True):
         fanart_url = self._get_fanart(min_height, min_width)['url']
         #fetch and write to disk
-        if ext:
-            dest = os.path.join(path, filename_root + ext)
-        else:
+        if orig_ext:
             dest = os.path.join(path, filename_root + os.path.splitext(fanart_url)[-1])
+        else:
+            dest = os.path.join(path, filename_root)
         try:
             f = open(dest, 'wb')
         except:
@@ -151,12 +151,12 @@ class metagen():
 
         return self._get_image(images, min_height, min_width)
 
-    def write_poster(self, filename_root, path, min_height, min_width, ext=None):
+    def write_poster(self, filename_root, path, min_height, min_width, orig_ext=True):
         poster_url = self._get_poster(min_height, min_width)['url']
-        if ext:
-            dest = os.path.join(path, filename_root + ext)
-        else:
+        if orig_ext:
             dest = os.path.join(path, filename_root + os.path.splitext(poster_url)[-1])
+        else:
+            dest = os.path.join(path, filename_root)
 
         try:
             f = open(dest, 'wb')
@@ -213,4 +213,4 @@ if __name__ == "__main__":
     x = metagen(id)
     x.write_nfo(".")
     x.write_fanart("fanart", ".", 0, 0)
-    x.write_poster("movie", ".", 0, 0, ext=".tbn")
+    x.write_poster("movie", ".", 0, 0)
