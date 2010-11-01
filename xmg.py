@@ -68,7 +68,8 @@ class metagen():
         if imdbpy:
             self.imdbpy = imdbpy
         else:
-            self.imdbpy = imdb.IMDb()
+            self.imdbpy = imdb.IMDb('http', useModule='beautifulsoup')
+
 
         self.imdbpy_movie = self._get_movie()
         self.nfo_string = self._nfo_gen()
@@ -213,10 +214,9 @@ if __name__ == "__main__":
     try:
         id = sys.argv[1]
     except:
-        print "Type '%s _IMDBID_' to generate metadata." % sys.argv[0]
-        sys.exit()
+        id = 'tt0111161'
 
     x = metagen(id)
-    x.write_nfo(".")
+    x.write_nfo(".\movie.nfo")
     x.write_fanart("fanart", ".", 0, 0)
     x.write_poster("movie", ".", 0, 0)
