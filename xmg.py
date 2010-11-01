@@ -119,8 +119,11 @@ class metagen():
 
         return self._get_image(images, min_height, min_width)
 
+    def get_fanart_url(self, min_height, min_width):
+        return self._get_fanart(min_height, min_width)['url']
+
     def write_fanart(self, filename_root, path, min_height, min_width, orig_ext=True):
-        fanart_url = self._get_fanart(min_height, min_width)['url']
+        fanart_url = self.get_fanart_url(min_height, min_width)
         #fetch and write to disk
         if orig_ext:
             dest = os.path.join(path, filename_root + os.path.splitext(fanart_url)[-1])
@@ -151,8 +154,11 @@ class metagen():
 
         return self._get_image(images, min_height, min_width)
 
+    def get_poster_url(self, min_height, min_width):
+        return self._get_poster(min_height, min_width)['url']
+
     def write_poster(self, filename_root, path, min_height, min_width, orig_ext=True):
-        poster_url = self._get_poster(min_height, min_width)['url']
+        poster_url = self.get_poster_url(min_height, min_width)
         if orig_ext:
             dest = os.path.join(path, filename_root + os.path.splitext(poster_url)[-1])
         else:
