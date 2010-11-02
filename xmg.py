@@ -25,7 +25,7 @@ class IdError(XmgException):
 class NfoError(XmgException):
     pass
 
-class metagen():
+class MetaGen():
     def __init__(self, imdbid, imdbpy = None):
         ''' metagen is used to download metadata for a movie or tv show and then create
         the necessary files for the media to be imported into XBMC.
