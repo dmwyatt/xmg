@@ -210,7 +210,7 @@ if __name__ == "__main__":
     except:
         id = 'tt0111161'
 
-    x = metagen(id)
+    x = MetaGen(id)
     x.write_nfo(".\movie.nfo")
     x.write_fanart("fanart", ".", 0, 0)
     x.write_poster("movie", ".", 0, 0)
