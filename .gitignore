@@ -1,5 +1,7 @@
 a.bat
 d.bat
+imdb/
 xmg/
 .idea/
 *.pyc
+*.komodoproject

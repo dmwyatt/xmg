@@ -1,17 +1,9 @@
 import json
 import os
-import shutil
 import urllib2
-
 
 __author__ = 'Therms'
 __tmdb_apikey__ = '6d96a9efb4752ed0d126d94e12e52036'
-
-try:
-    import imdb
-    __imdb__ = True
-except:
-    __imdb__ = False
 
 class XmgException(Exception):
     pass
@@ -58,46 +50,30 @@ class MetaGen():
 
         '''
 
-        #first we'll evaluate our arguments for error conditions
-        if not imdbpy and not __imdb__:
-            raise ApiError("Can't import imdb and wasn't provided with an imdbpy instance")
 
         if imdbid[:2].lower() == 'tt':
             self.imdbid = imdbid[2:]
-
-        if imdbpy:
-            self.imdbpy = imdbpy
         else:
-            self.imdbpy = imdb.IMDb('http', useModule='beautifulsoup')
+            self.imdbid = imdbid
 
-
-        self.imdbpy_movie = self._get_movie()
-        self.nfo_string = self._nfo_gen()
+        self.nfo_string = 'http://www.imdb.com/title/' + imdbid + '/'
         self.tmdb_data = self._get_tmdb_imdb()
-
+        self._validate_tmdb_json()
+        
         #TODO: Search by movie name
         #TODO: Search by tmdb_id
         #TODO: Search by movie hash
-
-
-    def _get_movie(self):
+        
+    
+    def _validate_tmdb_json(self):
         try:
-            imdbpy_movie = self.imdbpy.get_movie(self.imdbid)
-        except imdb._exceptions.IMDbParserError:
-            raise IdError("%s is not a valid imdb id" % self.imdbid)
-
-        if len(imdbpy_movie.keys()) == 0:
-            raise IdError("%s is not a valid imdb id" % self.imdbid)
-
-        return imdbpy_movie
-
-    def _nfo_gen(self):
-        ''' Get the imdb url for the specified movie object
-        '''
-        nfo_string = self.imdbpy.get_imdbURL(self.imdbpy_movie)
-        #TODO: Generate full nfo XML
-        return nfo_string
-
+            _ = self._get_fanart(0,0)
+        except:
+            try:
+                _ = self._get_poster(0,0)
+            except:
+                raise ApiError("Unknown TMDB data format: " % self.tmdb_data)
+                
     def write_nfo(self, path):
         try:
             f = open(path, 'w')
@@ -172,9 +148,23 @@ class MetaGen():
 
     def _get_tmdb_imdb(self):
         url = "http://api.themoviedb.org/2.1/Movie.imdbLookup/en/json/%s/%s" % (__tmdb_apikey__, "tt" + self.imdbid)
-        response = urllib2.urlopen(url)
-        tmdb_data = json.loads(response.read())[0]
-        return tmdb_data
+        
+        count = 0
+        while 1:
+            count += 1
+            response = urllib2.urlopen(url)
+            json_string = response.read()
+            try:
+                tmdb_data = json.loads(json_string)[0]
+                return tmdb_data
+            except ValueError, e:
+                if count < 3:
+                    continue
+                else:
+                    raise ApiError("Invalid JSON: %s: %s" % e, json_string)
+            except:
+                ApiError("JSON error with: %s" % json_string)
+
 
     def _get_image(self, image_list, min_height, min_width):
         #Select image
@@ -204,13 +194,32 @@ class MetaGen():
 
 
 if __name__ == "__main__":
-    import sys
-    try:
-        id = sys.argv[1]
-    except:
-        id = 'tt0111161'
-
-    x = MetaGen(id)
-    x.write_nfo(".\movie.nfo")
-    x.write_fanart("fanart", ".", 0, 0)
-    x.write_poster("movie", ".", 0, 0)
+    #import sys
+    #try:
+    #    id = sys.argv[1]
+    #except:
+    #    id = 'tt0111161'
+    #
+    #x = MetaGen(id)
+    #x.write_nfo(".\movie.nfo")
+    #x.write_fanart("fanart", ".", 0, 0)
+    #x.write_poster("movie", ".", 0, 0)
+    from imdb import IMDb
+    from random import choice
+    from time import sleep
+    
+    i = IMDb()
+    movies = i.get_top250_movies()
+    movies.extend(i.get_bottom100_movies())
+    
+    ids = [i.get_imdbID(x) for x in movies]
+    
+    loops = 30
+    count = 0
+    while 1:
+        count += 1
+        sleep(choice(range(100)))
+        for id in ids:
+            print "%s/%s" % (ids.index(id)*count, len(ids)*loops)
+            x = MetaGen(id)
+        if count > loops: break
