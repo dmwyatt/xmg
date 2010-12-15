@@ -194,32 +194,13 @@ class MetaGen():
 
 
 if __name__ == "__main__":
-    #import sys
-    #try:
-    #    id = sys.argv[1]
-    #except:
-    #    id = 'tt0111161'
-    #
-    #x = MetaGen(id)
-    #x.write_nfo(".\movie.nfo")
-    #x.write_fanart("fanart", ".", 0, 0)
-    #x.write_poster("movie", ".", 0, 0)
-    from imdb import IMDb
-    from random import choice
-    from time import sleep
+    import sys
+    try:
+        id = sys.argv[1]
+    except:
+        id = 'tt0111161'
     
-    i = IMDb()
-    movies = i.get_top250_movies()
-    movies.extend(i.get_bottom100_movies())
-    
-    ids = [i.get_imdbID(x) for x in movies]
-    
-    loops = 30
-    count = 0
-    while 1:
-        count += 1
-        sleep(choice(range(100)))
-        for id in ids:
-            print "%s/%s" % (ids.index(id)*count, len(ids)*loops)
-            x = MetaGen(id)
-        if count > loops: break
+    x = MetaGen(id)
+    x.write_nfo(".\movie.nfo")
+    x.write_fanart("fanart", ".", 0, 0)
+    x.write_poster("movie", ".", 0, 0)
