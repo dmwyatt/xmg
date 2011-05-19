@@ -56,7 +56,7 @@ class MetaGen():
         else:
             self.imdbid = imdbid
 
-        self.nfo_string = 'http://www.imdb.com/title/' + imdbid + '/'
+        self.nfo_string = 'http://www.imdb.com/title/tt' + imdbid + '/'
         self.tmdb_data = self._get_tmdb_imdb()
         self._validate_tmdb_json()
         
