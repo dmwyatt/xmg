@@ -97,39 +97,69 @@ class MetaGen():
     def _generate_nfo_xml(self):
         nfoxml = Element('movie')
 
-        title = SubElement(nfoxml, 'title')
-        title.text = self.tmdb_data['name']
+        try:
+            title = SubElement(nfoxml, 'title')
+            title.text = self.tmdb_data['name']
+        except:
+            print "No title found"
 
-        originaltitle = SubElement(nfoxml, 'originaltitel')
-        originaltitle.text = self.tmdb_data['original_name']
+        try:
+            originaltitle = SubElement(nfoxml, 'originaltitel')
+            originaltitle.text = self.tmdb_data['original_name']
+        except:
+            print "No originaltitle"
 
-        rating = SubElement(nfoxml, 'rating')
-        rating.text = str(self.tmdb_data['rating'])
+        try:
+            rating = SubElement(nfoxml, 'rating')
+            rating.text = str(self.tmdb_data['rating'])
+        except:
+            print "No rating found"
 
-        year = SubElement(nfoxml, 'year')
-        year.text = self.tmdb_data['released'][:4]
+        try:
+            year = SubElement(nfoxml, 'year')
+            year.text = self.tmdb_data['released'][:4]
+        except:
+            print "No year found"
 
-        votes = SubElement(nfoxml, 'votes')
-        votes.text = str(self.tmdb_data['votes'])
+        try:
+            votes = SubElement(nfoxml, 'votes')
+            votes.text = str(self.tmdb_data['votes'])
+        except:
+            print "No votes found"
 
-        plot = SubElement(nfoxml, 'plot')
-        plot.text = self.tmdb_data['overview']
+        try:
+            plot = SubElement(nfoxml, 'plot')
+            plot.text = self.tmdb_data['overview']
+        except:
+            print "No plot found"
 
         for genre in self.tmdb_data['genres']:
             genres = SubElement(nfoxml, 'genre')
             genres.text = genre['name']
 
-        runtime = SubElement(nfoxml, 'runtime')
-        runtime.text = str(self.tmdb_data['runtime']) + " min"
+        try:
+            runtime = SubElement(nfoxml, 'runtime')
+            runtime.text = str(self.tmdb_data['runtime']) + " min"
+        except:
+            print "No runtime found"
 
-        premiered = SubElement(nfoxml, 'premiered')
-        premiered.text = self.tmdb_data['released']
+        try:
+            premiered = SubElement(nfoxml, 'premiered')
+            premiered.text = self.tmdb_data['released']
+        except:
+            print "No premiered found"
 
-        mpaa = SubElement(nfoxml, 'mpaa')
-        mpaa.text = self.tmdb_data['certification']
+        try:
+            mpaa = SubElement(nfoxml, 'mpaa')
+            mpaa.text = self.tmdb_data['certification']
+        except:
+            print "No rating found"
 
-        id = SubElement(nfoxml, 'id')
-        id.text = self.tmdb_data['imdb_id']
+        try:
+            id = SubElement(nfoxml, 'id')
+            id.text = self.tmdb_data['imdb_id']
+        except:
+            print "No imdb_id found"
 
         # Clean up the xml and return it
         nfoxml = xml.dom.minidom.parseString(tostring(nfoxml))
@@ -137,7 +167,7 @@ class MetaGen():
         text_re = re.compile('>\n\s+([^<>\s].*?)\n\s+</', re.DOTALL)    
         xml_string = text_re.sub('>\g<1></', xml_string)
 
-        return xml_string
+        return xml_string.encode('utf-8')
 
     def _get_fanart(self, min_height, min_width):
         '''  Fetches the fanart for the specified imdb_id and saves it to dir.
