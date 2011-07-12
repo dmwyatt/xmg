@@ -101,37 +101,37 @@ class MetaGen():
             title = SubElement(nfoxml, 'title')
             title.text = self.tmdb_data['name']
         except:
-            print "No title found"
+            pass
 
         try:
             originaltitle = SubElement(nfoxml, 'originaltitel')
             originaltitle.text = self.tmdb_data['original_name']
         except:
-            print "No originaltitle"
+            pass
 
         try:
             rating = SubElement(nfoxml, 'rating')
             rating.text = str(self.tmdb_data['rating'])
         except:
-            print "No rating found"
+            pass
 
         try:
             year = SubElement(nfoxml, 'year')
             year.text = self.tmdb_data['released'][:4]
         except:
-            print "No year found"
+            pass
 
         try:
             votes = SubElement(nfoxml, 'votes')
             votes.text = str(self.tmdb_data['votes'])
         except:
-            print "No votes found"
+            pass
 
         try:
-            plot = SubElement(nfoxml, 'plot')
+            plot = SubElement(nfoxml, 'outline')
             plot.text = self.tmdb_data['overview']
         except:
-            print "No plot found"
+            pass
 
         for genre in self.tmdb_data['genres']:
             genres = SubElement(nfoxml, 'genre')
@@ -141,25 +141,25 @@ class MetaGen():
             runtime = SubElement(nfoxml, 'runtime')
             runtime.text = str(self.tmdb_data['runtime']) + " min"
         except:
-            print "No runtime found"
+            pass
 
         try:
             premiered = SubElement(nfoxml, 'premiered')
             premiered.text = self.tmdb_data['released']
         except:
-            print "No premiered found"
+            pass
 
         try:
             mpaa = SubElement(nfoxml, 'mpaa')
             mpaa.text = self.tmdb_data['certification']
         except:
-            print "No rating found"
+            pass
 
         try:
             id = SubElement(nfoxml, 'id')
             id.text = self.tmdb_data['imdb_id']
         except:
-            print "No imdb_id found"
+            pass
 
         # Clean up the xml and return it
         nfoxml = xml.dom.minidom.parseString(tostring(nfoxml))
